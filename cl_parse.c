@@ -1803,13 +1803,19 @@ void CL_ParseIntermission (void)
 #ifdef HEXEN2_SUPPORT
 	if (hexen2)
 		cl.intermission = MSG_ReadByte();
-	else
 #endif
-		cl.intermission = 1;
-
-	// intermission bugfix -- by joe
-	cl.completed_time = cl.mtime;
-	vid.recalc_refdef = true;	// go to full screen
+	if (cl.intermission == 1)
+	{
+		// intermission bugfix -- by joe
+		cl.completed_time = cl.mtime;
+		vid.recalc_refdef = true;	// go to full screen
+	}
+	if (cls.demoplayback)
+	{
+		// Fix camera view angles, from BJP GLQ
+		entity_t *ent = &cl_entities[cl.viewentity];
+		VectorCopy (ent->msg_angles, ent->angles);
+	}
 
 	if (cl.protocol == PROTOCOL_VERSION_QW)
 	{
@@ -2170,11 +2176,13 @@ void CL_ParseServerMessage (void)
 			break;
 
 		case svc_intermission:
+			cl.intermission = 1;
 			CL_ParseIntermission ();
 			break;
 
 		case svc_finale:
 			cl.intermission = 2;
+			CL_ParseIntermission ();
 			cl.completed_time = cl.time;
 			vid.recalc_refdef = true;	// go to full screen
 			SCR_CenterPrint (MSG_ReadString());
@@ -2194,6 +2202,7 @@ void CL_ParseServerMessage (void)
 				break;
 			}
 			cl.intermission = 3;
+			CL_ParseIntermission ();
 			cl.completed_time = cl.time;
 			vid.recalc_refdef = true;	// go to full screen
 			SCR_CenterPrint (MSG_ReadString());
