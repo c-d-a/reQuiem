@@ -123,7 +123,6 @@ cvar_t		scr_printstats_length = {"scr_printstats_length", "0.5"};
 cvar_t		cl_sbar          = {"cl_sbar",            "0", CVAR_FLAG_ARCHIVE, OnChange_screenvar};
 cvar_t		scr_sbarsize     = {"scr_sbarsize",       "0", CVAR_FLAG_ARCHIVE, OnChange_screenvar};		// JDH
 cvar_t		scr_hudscale     = {"scr_hudscale",       "1", CVAR_FLAG_ARCHIVE};		// JDH
-cvar_t		scr_notifyscale  = {"scr_notifyscale",    "1", CVAR_FLAG_ARCHIVE};
 cvar_t		scr_menusize     = {"scr_menusize",       "0", CVAR_FLAG_ARCHIVE};			// JDH
 cvar_t		scr_centermenu   = {"scr_centermenu",     "1", CVAR_FLAG_ARCHIVE};
 
@@ -220,8 +219,7 @@ void SCR_Init (void)
 
 	Cvar_RegisterBool (&cl_sbar);		// by joe
 	Cvar_RegisterFloat (&scr_sbarsize, 0, 100);
-	Cvar_RegisterFloat (&scr_hudscale, 1, 3);		// JDH (range is somewhat arbitrary, used by menu only)
-	Cvar_RegisterFloat (&scr_notifyscale, 1, 3);
+	Cvar_RegisterFloat (&scr_hudscale, 1, 8);
 	Cvar_RegisterBool (&scr_centermenu);
 	Cvar_RegisterFloat (&scr_menusize, 0, 100);
 
@@ -2089,9 +2087,7 @@ void SCR_DrawConsole (void)
 		// only draw notify in game
 		if (key_dest == key_game || key_dest == key_message)
 		{
-			SCR_SetScale (scr_notifyscale.value);
 			Con_DrawNotify ();
-			SCR_UnsetScale ();
 		}
 	}
 }

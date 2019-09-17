@@ -1101,15 +1101,15 @@ void Draw_Character2 (int x, int y, int num)
 */
 /*
 ================
-Draw_String
+Draw_String_Scaled
 ================
 */
-void Draw_String (int x, int y, const char *str)
+void Draw_String_Scaled (int x, int y, const char *str, float scale)
 {
 //	float		frow, fcol, xsize, ysize;
 	int		num;
 
-	if (y <= -DRAW_CHARHEIGHT)
+	if (y <= -DRAW_CHARHEIGHT*scale)
 		return;			// totally off screen
 
 	if (!*str)
@@ -1136,7 +1136,7 @@ void Draw_String (int x, int y, const char *str)
 	{
 		if ((num = *str++) != 32)	// skip spaces
 		{
-			Draw_Character (x, y, num);
+			Draw_Character_Scaled (x, y, num, scale);
 		/*
 		#ifdef HEXEN2_SUPPORT
 			if (hexen2)
@@ -1160,7 +1160,7 @@ void Draw_String (int x, int y, const char *str)
 			glVertex2f (x, y+8);
 		*/
 		}
-		x += DRAW_CHARWIDTH;
+		x += DRAW_CHARWIDTH*scale;
 	}
 
 //	glEnd ();
@@ -1168,10 +1168,10 @@ void Draw_String (int x, int y, const char *str)
 
 /*
 ================
-Draw_Alt_String
+Draw_Alt_String_Scaled
 ================
 */
-void Draw_Alt_String (int x, int y, const char *str)
+void Draw_Alt_String_Scaled (int x, int y, const char *str, float scale)
 {
 /*	char buf[1024];
 	int i;
@@ -1209,9 +1209,9 @@ void Draw_Alt_String (int x, int y, const char *str)
 
 	while (*str)
 	{
-		Draw_Character (x, y, (int)*str | mask);
+		Draw_Character_Scaled (x, y, (int)*str | mask, scale);
 		str++;
-		x += DRAW_CHARWIDTH;
+		x += DRAW_CHARWIDTH*scale;
 	}
 }
 
@@ -2034,7 +2034,7 @@ void Draw_ConsoleBackground (int lines)
 */
 end:
 	sprintf (ver, "reQuiem %s", REQUIEM_VERSION);
-	Draw_Alt_String (vid.conwidth - (strlen(ver) + 1) * DRAW_CHARWIDTH, lines - DRAW_CHARHEIGHT - 2, ver);
+	Draw_Alt_String_Scaled (vid.conwidth - (strlen(ver) + 1) * DRAW_CHARWIDTH, lines - DRAW_CHARHEIGHT - 2, ver, scr_hudscale.value);
 }
 
 void Draw_ConbackSolid (void)

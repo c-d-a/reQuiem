@@ -61,6 +61,8 @@ typedef struct
 extern	mpic_t		*draw_disc;	// also used on sbar
 
 #define Draw_Character(x, y, num) Draw_Character_Scaled((x), (y), (num), 1.0)
+#define Draw_String(x, y, str) Draw_String_Scaled((x), (y), (str), 1.0)
+#define Draw_Alt_String(x, y, str) Draw_Alt_String_Scaled((x), (y), (str), 1.0)
 #define Draw_Pic(x, y, pic) Draw_Pic_Scaled((x), (y), (pic), 1.0)
 #define Draw_TransPic(x, y, pic) Draw_Pic((x), (y), (pic))
 #define Draw_TransPic_Scaled(x, y, pic, scale) Draw_Pic_Scaled((x), (y), (pic), (scale))
@@ -82,8 +84,8 @@ void Draw_TileClear (int x, int y, int w, int h);
 void Draw_Fill (int x, int y, int w, int h, int c);
 void Draw_FillRGB (int x, int y, int w, int h, const byte rgb[3]);
 void Draw_DimScreen (void);
-void Draw_String (int x, int y, const char *str);
-void Draw_Alt_String (int x, int y, const char *str);
+void Draw_String_Scaled (int x, int y, const char *str, float scale);
+void Draw_Alt_String_Scaled (int x, int y, const char *str, float scale);
 void Draw_BigString (int x, int y, const char *str);
 void Draw_BigNumString (int x, int y, const char *str, int flags);
 mpic_t *Draw_PicFromWad (const char *name);

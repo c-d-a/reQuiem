@@ -33,7 +33,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "movie.h"		// just for Movie_IsActive check in Con_Print
 
 #define CON_CHARWIDTH  DRAW_CHARWIDTH
-#define CON_LINEHEIGHT DRAW_CHARWIDTH
+#define CON_CHARHEIGHT DRAW_CHARWIDTH
+
+int con_cwidth; //can be changed in-game via scr_hudscale
+int con_lheight; //updated at init and size check - cda
 
 //#define CON_EMPTYCHAR ' '
 #define CON_EMPTYCHAR     0
@@ -91,11 +94,9 @@ typedef struct
 } cmdhistory_t;
 
 
-qboolean On_Change_con_linespacing (cvar_t *var, const char *string);
-
 cvar_t		con_notifytime   = {"con_notifytime",   "3", CVAR_FLAG_ARCHIVE};		//seconds
 cvar_t		_con_notifylines = {"con_notifylines",  "4", CVAR_FLAG_ARCHIVE};
-cvar_t		con_linespacing  = {"con_linespacing",  "0", CVAR_FLAG_ARCHIVE, On_Change_con_linespacing};		// JDH
+cvar_t		con_linespacing = {"con_linespacing",  "0", CVAR_FLAG_ARCHIVE};
 cvar_t		con_autocomplete = {"con_autocomplete", "1", CVAR_FLAG_ARCHIVE};		// JDH
 
 #define	NUM_CON_TIMES 16
@@ -104,7 +105,6 @@ float		con_times[NUM_CON_TIMES];	// realtime time the line was generated
 
 int		con_vislines;
 int		con_notifylines;		// scan lines to clear for notify lines
-int		con_lineheight = CON_LINEHEIGHT;		// note: change this if default value of con_linespacing is changed
 
 linehist_t	con_keylines[MAXCMDLINES];
 int			con_editpos;
@@ -200,20 +200,6 @@ void Con_MessageMode2_f (cmd_source_t src)
 	team_message = true;
 }
 
-qboolean On_Change_con_linespacing (cvar_t *var, const char *string)
-{
-	float val = Q_atof (string);
-
-	if ((val < var->minvalue) || (val > var->maxvalue) || (val != (int)val))
-	{
-		Con_Printf ("%s must be an integer between %d and %d\n", var->name, var->minvalue, var->maxvalue);
-		return true;
-	}
-
-	con_lineheight = CON_LINEHEIGHT + val;
-	return false;		// allow change
-}
-
 /*
 ================
 Con_CheckResize
@@ -226,7 +212,10 @@ void Con_CheckResize (void)
 	int			i, j, width, oldwidth, oldtotallines, numlines, numchars;
 	conchar_t	*tbuf;
 
-	width = (vid.conwidth / CON_CHARWIDTH) - 2;
+	con_cwidth = CON_CHARWIDTH*scr_hudscale.value;
+	con_lheight = (CON_CHARHEIGHT+con_linespacing.value)*scr_hudscale.value;
+
+	width = (vid.conwidth / con_cwidth) - 2;
 
 	if (width == con_linewidth)
 		return;
@@ -380,6 +369,8 @@ void Con_PreInit (void)
 
 	con_text = Hunk_AllocName (con_buffersize*sizeof(conchar_t), "context");
 	con_linewidth = CON_STARTWIDTH;
+	con_cwidth = CON_CHARWIDTH*scr_hudscale.value;
+	con_lheight = (CON_CHARHEIGHT+con_linespacing.value)*scr_hudscale.value;
 	con_totallines = con_buffersize / con_linewidth;
 	memset (con_text, CON_EMPTYCHAR, con_buffersize*sizeof(conchar_t));
 	con_backscroll = 0;
@@ -388,7 +379,7 @@ void Con_PreInit (void)
 // register our commands
 	Cvar_RegisterFloat (&con_notifytime, 0, 5);
 	Cvar_RegisterInt (&_con_notifylines, 0, NUM_CON_TIMES);
-	Cvar_RegisterInt (&con_linespacing, 0, CON_LINEHEIGHT);
+	Cvar_RegisterInt (&con_linespacing, 0, CON_CHARHEIGHT);
 	Cvar_RegisterInt (&con_autocomplete, 0, 2);
 
 	Cvar_RegisterInt (&con_logcenterprint, 0, 2); //johnfitz
@@ -644,7 +635,7 @@ void Con_PagedOutput_Begin (void)
 	if (scr_conlines)
 	{
 		con_pagestart = con_current;
-		con_pageheight = ((int)scr_conlines / con_lineheight) - 5;
+		con_pageheight = ((int)scr_conlines / con_lheight) - 5;
 		scr_disabled_for_loading = true;		// don't update screen after every line
 	}
 }
@@ -1031,36 +1022,36 @@ void Con_DrawInput (void)
 
 	// draw it
 //#ifdef GLQUAKE
-	Draw_String (CON_CHARWIDTH, con_vislines - 2*con_lineheight, text);
+	Draw_String_Scaled (con_cwidth, con_vislines - 2*CON_CHARHEIGHT*scr_hudscale.value, text, scr_hudscale.value);
 //#else
 //	for (i=0 ; i<con_linewidth ; i++)
-//		Draw_Character ((i+1)*CON_CHARWIDTH, con_vislines - 2*con_lineheight, text[i]);
+//		Draw_Character ((i+1)*con_cwidth, con_vislines - 2*con_lheight, text[i]);
 //#endif
 
 //	for (i = 0; i < con_linewidth; i++)
-//		Draw_Character ((i+1)*CON_CHARWIDTH, con_vislines - 2*con_lineheight, text[i]);
+//		Draw_Character ((i+1)*con_cwidth, con_vislines - 2*con_lheight, text[i]);
 
 	if (con_selstart)
 	{
 		extern int char_texture, char_texture_bright;
 		int waschars = char_texture;
 
-//		Draw_Fill ((key_selstart+1)*CON_CHARWIDTH, con_vislines - 2*con_lineheight,
-//						(sel_end - key_selstart)*CON_CHARWIDTH, con_lineheight+1, 7);
+//		Draw_Fill ((key_selstart+1)*con_cwidth, con_vislines - 2*con_lheight,
+//						(sel_end - key_selstart)*con_cwidth, con_lheight+1, 7);
 
-		for (i = 0; i < con_lineheight; i++)
+		for (i = 0; i < CON_CHARHEIGHT*scr_hudscale.value; i++)
 		{
 //			byte rgb[3];
 
 //			rgb[0] = rgb[1] = rgb[2] = 80 + i*16;
-//			Draw_FillRGB ((key_selstart+1)*CON_CHARWIDTH, con_vislines - con_lineheight - i,
-//						(sel_end - key_selstart)*CON_CHARWIDTH, 1, rgb);
-			Draw_Fill ((con_selstart+1)*CON_CHARWIDTH, con_vislines - con_lineheight - i,
-						(sel_end - con_selstart)*CON_CHARWIDTH, 1, i+5);
+//			Draw_FillRGB ((key_selstart+1)*con_cwidth, con_vislines - con_lheight - i,
+//						(sel_end - key_selstart)*con_cwidth, 1, rgb);
+			Draw_Fill ((con_selstart+1)*con_cwidth, con_vislines - CON_CHARHEIGHT*scr_hudscale.value - i,
+						(sel_end - con_selstart)*con_cwidth, 1, i/scr_hudscale.value+5);
 		}
 
-//		Draw_Fill ((con_selstart+1)*CON_CHARWIDTH, con_vislines - con_lineheight + 1,
-//					(sel_end - con_selstart)*CON_CHARWIDTH, 1, 4);
+//		Draw_Fill ((con_selstart+1)*con_cwidth, con_vislines - con_lheight + 1,
+//					(sel_end - con_selstart)*con_cwidth, 1, 4);
 
 	// This combiner is similar to inverting the character's colors, except any
 	// black pixels effectively become transparent.  This works well for the
@@ -1073,12 +1064,12 @@ void Con_DrawInput (void)
 		for (i = con_selstart; i < sel_end; i++)
 		{
 //			glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-//			Draw_Character ((i+1)*CON_CHARWIDTH, con_vislines - 2*con_lineheight, 11);
+//			Draw_Character ((i+1)*con_cwidth, con_vislines - 2*con_lheight, 11);
 
 //			if (text[i] != 11 + 84 * key_insert)
 			{
 //				glBlendFunc (GL_DST_COLOR, GL_SRC_COLOR);
-				Draw_Character ((i+1)*CON_CHARWIDTH, con_vislines - 2*con_lineheight, text[i]);
+				Draw_Character_Scaled ((i+1)*con_cwidth, con_vislines - 2*CON_CHARHEIGHT*scr_hudscale.value, text[i], scr_hudscale.value);
 			}
 		}
 
@@ -1124,9 +1115,9 @@ void Con_DrawNotify (void)
 		//scr_copytop = 1;
 
 		for (x = 0 ; (x < con_linewidth) && text[x] ; x++)
-			Draw_Character ((x+1)*CON_CHARWIDTH, v, text[x]);
+			Draw_Character_Scaled ((x+1)*con_cwidth, v, text[x], scr_hudscale.value);
 
-		v += con_lineheight;
+		v += con_lheight;
 	}
 
 	if (key_dest == key_message)
@@ -1138,29 +1129,29 @@ void Con_DrawNotify (void)
 
 		if (team_message)
 		{
-			Draw_String (CON_CHARWIDTH, v, "(say):");
+			Draw_String_Scaled (con_cwidth, v, "(say):", scr_hudscale.value);
 			x = 7;
 		}
 		else
 		{
-			Draw_String (CON_CHARWIDTH, v, "say:");
+			Draw_String_Scaled (con_cwidth, v, "say:", scr_hudscale.value);
 			x = 5;
 		}
 
 		while (chat_buffer[i])
 		{
-			Draw_Character (x * CON_CHARWIDTH, v, chat_buffer[i]);
+			Draw_Character_Scaled (x * con_cwidth, v, chat_buffer[i], scr_hudscale.value);
 			x++;
 
 			i++;
 			if (x > con_linewidth)
 			{
 				x = team_message ? 7 : 5;
-				v += con_lineheight;
+				v += con_lheight;
 			}
 		}
-		Draw_Character (x * CON_CHARWIDTH, v, 10 + ((int)(realtime * CON_CURSORSPEED) & 1));
-		v += con_lineheight;
+		Draw_Character_Scaled (x * con_cwidth, v, 10 + ((int)(realtime * CON_CURSORSPEED) & 1), scr_hudscale.value);
+		v += con_lheight;
 	}
 
 	if (v > con_notifylines)
@@ -1198,14 +1189,14 @@ void Con_DrawConsole (int lines, qboolean drawinput)
 // draw the text
 	con_vislines = lines;
 
-	rows = (lines / con_lineheight) - 2;		// rows of text to draw
-//	y = lines - 2*CON_LINEHEIGHT - (rows * CON_LINEHEIGHT);	// may start slightly negative
-	y = lines - (2+rows)*con_lineheight;	// may start slightly negative
+	rows = (lines + con_linespacing.value / con_lheight) - 2;		// rows of text to draw
+//	y = lines - 2*con_lheight - (rows * con_lheight);	// may start slightly negative
+	y = lines - rows*con_lheight - 2*CON_CHARHEIGHT*scr_hudscale.value;	// may start slightly negative
 
-	con_backscroll = bound(0, con_backscroll, con_numlines - rows);
+	con_backscroll = bound(0, con_backscroll, con_numlines - (rows+2)/con_lheight + 2);
 	lastline = (con_x ? con_current : con_current-1);	// don't include empty line at bottom
 
-	for (i = lastline - rows + 1 ; i <= lastline ; i++, y += con_lineheight)
+	for (i = lastline - rows + 1 ; i <= lastline ; i++, y += con_lheight)
 	{
 		// added by joe
 		if (con_backscroll)
@@ -1213,7 +1204,7 @@ void Con_DrawConsole (int lines, qboolean drawinput)
 			if (i == lastline)
 			{
 				for (x = 0 ; x < con_linewidth ; x += 4)
-					Draw_Character ((x+1)*CON_CHARWIDTH, y, '^');
+					Draw_Character_Scaled ((x+1)*con_cwidth, y, '^', scr_hudscale.value);
 				continue;
 			}
 
@@ -1226,7 +1217,7 @@ void Con_DrawConsole (int lines, qboolean drawinput)
 		text = con_text + (j % con_totallines)*con_linewidth;
 
 		for (x = 0 ; (x < con_linewidth) && text[x] ; x++)
-			Draw_Character ((x+1)*CON_CHARWIDTH, y, text[x]);
+			Draw_Character_Scaled ((x+1)*con_cwidth, y, text[x], scr_hudscale.value);
 	}
 
 // draw the input prompt, user text, and cursor if desired
@@ -1576,7 +1567,7 @@ void Con_Keydown (int key)
 			if (keydown[K_CTRL])
 			{
 				con_backscroll = con_numlines;
-//				con_backscroll = con_numlines - ((int)scr_conlines / CON_LINEHEIGHT) + 2;
+//				con_backscroll = con_numlines - ((int)scr_conlines / con_lheight) + 2;
 //				con_backscroll = max(con_backscroll, 0);
 			}
 			else
@@ -1602,13 +1593,13 @@ void Con_Keydown (int key)
 
 		case K_PGUP:
 		case K_MWHEELUP:
-			if (con_numlines > ((int)scr_conlines / con_lineheight) - 2)
+			if (con_numlines > ((int)scr_conlines / con_lheight) - 2)
 			{
 				if (keydown[K_CTRL] && key == K_PGUP)
-					con_backscroll += ((int)scr_conlines / con_lineheight) - 3;
+					con_backscroll += ((int)scr_conlines / con_lheight) - 3;
 				else
 					con_backscroll += 2;
-//				con_backscroll = min(con_backscroll, con_numlines - ((int)scr_conlines / CON_LINEHEIGHT) + 2);
+//				con_backscroll = min(con_backscroll, con_numlines - ((int)scr_conlines / con_lheight) + 2);
 			}
 			else con_backscroll = 0;
 			return;
@@ -1616,7 +1607,7 @@ void Con_Keydown (int key)
 		case K_PGDN:
 		case K_MWHEELDOWN:
 			if (keydown[K_CTRL] && key == K_PGDN)
-				con_backscroll -= ((int)scr_conlines / con_lineheight) - 3;
+				con_backscroll -= ((int)scr_conlines / con_lheight) - 3;
 			else
 				con_backscroll -= 2;
 //			con_backscroll = max(con_backscroll, 0);
@@ -1649,7 +1640,7 @@ void Con_Keydown (int key)
 		case K_UPARROW:
 			if (keydown[K_CTRL])
 			{
-				Con_AdjustHeight (-con_lineheight);
+				Con_AdjustHeight (-con_lheight);
 			}
 			else
 			{
@@ -1668,7 +1659,7 @@ void Con_Keydown (int key)
 		case K_DOWNARROW:
 			if (keydown[K_CTRL])
 			{
-				Con_AdjustHeight (con_lineheight);
+				Con_AdjustHeight (con_lheight);
 			}
 			else
 			{
