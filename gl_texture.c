@@ -84,6 +84,7 @@ cvar_t	gl_texbrighten = {"gl_texbrighten", "0", CVAR_FLAG_ARCHIVE, OnChange_gl_t
 extern	unsigned d_8to24table2[256];
 extern	byte	vid_gamma_table[256];
 extern	float	vid_gamma;
+extern qboolean gl_npot;
 
 void Scrap_Init (void);
 void GL_Upload8 (gltexture_t *glt, byte *data, int width, int height, int texflags);
@@ -820,10 +821,18 @@ void GL_Upload32 (gltexture_t *glt, const unsigned *data, int *width, int *heigh
 		glt->average_color = (r | (g << 8) | (b << 16));
 	}
 
-	for (scaled_width = 1 ; scaled_width < *width ; scaled_width <<= 1)
-		;
-	for (scaled_height = 1 ; scaled_height < *height ; scaled_height <<= 1)
-		;
+	if ( gl_npot && !(texflags & TEX_NOSTRETCH) )
+	{
+		scaled_width = *width;
+		scaled_height = *height;
+	}
+	else
+	{
+		for (scaled_width = 1 ; scaled_width < *width ; scaled_width <<= 1)
+			;
+		for (scaled_height = 1 ; scaled_height < *height ; scaled_height <<= 1)
+			;
+	}
 
 	//if (scaled_width * scaled_height * 4 > sizeof(scaled))
 	//	Sys_Error ("GL_LoadTexture: too big");

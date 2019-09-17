@@ -38,6 +38,7 @@ const	char	*gl_renderer;
 const	char	*gl_version;
 const	char	*gl_extensions;
 
+qboolean	gl_npot = false;
 qboolean	gl_mtexable = false;
 int			gl_textureunits = 1;
 
@@ -141,6 +142,16 @@ qboolean CheckExtension (const char *extension)
 	return false;
 }
 
+void CheckNPOTExtension (void)
+{
+	if ( !COM_CheckParm("-nonpot") && \
+		CheckExtension("GL_ARB_texture_non_power_of_two") )
+	{
+		Con_Print("Using GL_ARB_texture_non_power_of_two\n");
+		gl_npot = true;
+	}
+}
+
 void CheckMultiTextureExtensions (void)
 {
 	if (!COM_CheckParm("-nomtex") && CheckExtension("GL_ARB_multitexture"))
@@ -219,6 +230,7 @@ void GL_Init (void)
 
 	glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
+	CheckNPOTExtension ();
 	CheckMultiTextureExtensions ();
 
 	gl_add_ext = CheckExtension ("GL_ARB_texture_env_add");
