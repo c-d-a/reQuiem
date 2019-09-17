@@ -302,8 +302,11 @@ void GL_DrawAliasGlow (entity_t *currententity, model_t *clmodel)
 		else if (!strcmp (clmodel->name, "progs/invulner.mdl"))
 			glColor3f(0.8f*intensity, 0.1f*intensity, 0.1f*intensity);
 
-		for (i=0 ; i<3 ; i++)
-			v[i] = lightorigin[i] - vpn[i]*radius;
+		v[2] += cl.viewheight;
+		VectorNormalize (v);
+		VectorScale (v, radius, v);
+		VectorSubtract (lightorigin, v, v);
+
 		glVertex3fv(v);
 		glColor3f(0.0f, 0.0f, 0.0f);
 		for (i=16; i>=0; i--)
