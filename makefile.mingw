@@ -85,12 +85,12 @@ GLX_LDFLAGS := -l kernel32 -l user32 -l gdi32 -l dxguid -l opengl32 -l wsock32 -
 # -l png -l z
 
 glx: _DIR := $(GLX_DIR)
-glx: _OBJS := $(GLX_C_OBJS) $(GLX_S_OBJS)
+glx: _OBJS := $(GLX_C_OBJS) $(GLX_S_OBJS) $(GLX_DIR)/resource.o
 glx: _LDFLAGS := $(GLX_LDFLAGS)
 glx: _CFLAGS := $(GLX_CFLAGS)
 glx: $(GLX_TARGET)
 
-$(GLX_TARGET): $(GLX_DIR) $(GLX_C_OBJS) $(GLX_S_OBJS)
+$(GLX_TARGET): $(GLX_DIR) $(GLX_C_OBJS) $(GLX_S_OBJS) $(GLX_DIR)/resource.o
 	$(BUILD)
 
 $(GLX_C_OBJS): $(GLX_DIR)/%.o: %.c quakedef.h
@@ -99,7 +99,10 @@ $(GLX_C_OBJS): $(GLX_DIR)/%.o: %.c quakedef.h
 $(GLX_S_OBJS): $(GLX_DIR)/%.o: %.s
 	$(S_BUILD)
 
-glxclean: _FILES += $(GLX_C_OBJS) $(GLX_S_OBJS)
+$(GLX_DIR)/resource.o: resource.rc quake.ico
+	windres resource.rc $(GLX_DIR)/resource.o
+
+glxclean: _FILES += $(GLX_C_OBJS) $(GLX_S_OBJS) $(GLX_DIR)/resource.o
 glxclean: _DIRS := $(GLX_DIR)
 glxclean:
 	$(RM_FILES)
