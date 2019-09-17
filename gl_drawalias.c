@@ -304,14 +304,17 @@ void GL_DrawAliasGlow (entity_t *currententity, model_t *clmodel)
 
 		v[2] += cl.viewheight;
 		VectorNormalize (v);
-		VectorScale (v, radius, v);
+		if (distance - radius > 10)
+			VectorScale (v, radius, v);
+		else
+			VectorScale (v, distance - 10, v); // avoid clipping
 		VectorSubtract (lightorigin, v, v);
 
 		glVertex3fv(v);
 		glColor3f(0.0f, 0.0f, 0.0f);
-		for (i=16; i>=0; i--)
+		for (i=24; i>=0; i--)
 		{
-			float a = i/16.0f * M_PI*2;
+			float a = i/24.0f * M_PI*2;
 			for (j=0; j<3; j++)
 				v[j] = lightorigin[j] + vright[j]*cos(a)*radius + vup[j]*sin(a)*radius;
 

@@ -147,6 +147,7 @@ void R_RenderDlight (dlight_t *light)
 
 	rad = light->radius * 0.35;
 	VectorSubtract (light->origin, r_origin, v);
+	v[2] += cl.viewheight;
 	length = VectorNormalize (v);
 
 	if (length < rad)
