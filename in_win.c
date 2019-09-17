@@ -264,7 +264,7 @@ DWORD WINAPI IN_SMouseProc (void *lpParameter)
 
 void IN_SMouseRead (int *mx, int *my)
 {
-	static	acc_x, acc_y;
+	static int	acc_x, acc_y;
 	int	x = 0, y = 0;
 	double	t1, t2, maxtime, mintime;
 
@@ -286,7 +286,7 @@ void IN_SMouseRead (int *mx, int *my)
 	// show	rate if	requested
 	if (m_showrate.value)
 	{
-		static	last_wseq_printed;
+		static int	last_wseq_printed;
 
 		if (m_history_x_wseq > last_wseq_printed)
 		{
