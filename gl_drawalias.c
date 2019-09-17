@@ -1610,7 +1610,7 @@ void R_PositionAliasModel (entity_t *ent, model_t *clmodel, maliasframedesc_t *c
 	}
 	else if (ent == &cl.viewent)
 	{
-		scale_x *= (0.5 + bound(0, r_viewmodelsize.value, 1) / 2);
+		scale_x *= (0.5 + r_viewmodelsize.value / 2);
 	}
 
 //	glTranslatef (paliashdr->scale_origin[0], paliashdr->scale_origin[1], trans_z);
