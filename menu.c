@@ -5359,7 +5359,7 @@ void M_Quit_Draw (void)
 #endif
 	mask = 128;
 
-	M_DrawTextBox (0, 4, 38*DRAW_CHARWIDTH, 22*DRAW_CHARHEIGHT);
+	M_DrawTextBox (0, 4, 38*DRAW_CHARWIDTH, 20*DRAW_CHARHEIGHT);
 	y = 16;
 	for (p = quitmsg ; *p ; p++, y += DRAW_CHARHEIGHT)
 	{
