@@ -237,6 +237,7 @@ void COM_CreatePath (const char *path);			//
 qboolean COM_FileExists (const char *path);
 qboolean COM_DzipIsMounted (const char *qpath, const char *dzname);
 
+int COM_AddDzipByName (const char *name);
 
 //============================================================================
 

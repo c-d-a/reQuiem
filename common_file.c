@@ -1704,7 +1704,7 @@ COM_AddDzipByName
 - used by callback above, and also when adding newly created dzip
 ================
 */
-int COM_AddDzipByName (char *name)
+int COM_AddDzipByName (const char *name)
 {
 	char	filepath[MAX_OSPATH];
 	pack_t	*pak;
