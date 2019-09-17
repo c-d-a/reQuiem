@@ -219,17 +219,10 @@ void GL_DrawAliasGlow (entity_t *currententity, model_t *clmodel)
 	// See if view is outside the light.
 	distance = VectorLength(v);
 
-	if (gl_fogenable.value)
-	{
-		float att_begin = 512;
-		float att_end = att_begin + 256 + 768 * (1 - gl_fogdensity.value);
-		// Attenuate radius in fog
-		radius *= (att_end - min(max(distance, att_begin), att_end)) / (att_end - att_begin);
-	}
-
 	if (distance > radius)
 	{
-		glDepthMask (0);
+		Fog_DisableGFog();
+		glDepthMask (GL_FALSE);
 		glDisable (GL_TEXTURE_2D);
 		glShadeModel (GL_SMOOTH);
 		glEnable (GL_BLEND);
@@ -283,6 +276,11 @@ void GL_DrawAliasGlow (entity_t *currententity, model_t *clmodel)
 		}
 		intensity *= ((float)j / 255.0f);
 
+		if (gl_fogenable.value) // Attenuate in fog with distance
+		{
+			intensity *= powf(2.7, -gl_fogdensity.value*distance*0.01);
+		}
+
 		//set the colour of the glow
 		if ((clmodel->modhint == MOD_FLAME) || \
 			(clmodel->modhint == MOD_CANDLES) || \
@@ -325,7 +323,8 @@ void GL_DrawAliasGlow (entity_t *currententity, model_t *clmodel)
 		glDisable (GL_BLEND);
 		glEnable (GL_TEXTURE_2D);
 		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDepthMask (1);
+		glDepthMask (GL_TRUE);
+		Fog_EnableGFog();
 	}
 }
 
