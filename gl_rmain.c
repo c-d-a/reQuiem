@@ -136,7 +136,7 @@ cvar_t	gl_part_other       = {"gl_part_other",       "0", CVAR_FLAG_ARCHIVE};
   cvar_t  gl_shinywater     = {"gl_shinywater",       "0", CVAR_FLAG_ARCHIVE};			// JT030105 - add reflections
 #endif
 
-cvar_t	gl_skyhack = {"gl_skyhack", "1", CVAR_FLAG_ARCHIVE};
+cvar_t	gl_skyhack = {"gl_skyhack", "0", CVAR_FLAG_ARCHIVE};
 	// less than 0 --> use old, slow code		**TEMP**
 	// 0 --> use new, faster code
 	// 1 --> use very fast, but buggy code on skyboxes only
