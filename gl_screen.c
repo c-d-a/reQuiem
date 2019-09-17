@@ -1033,8 +1033,10 @@ void SCR_DrawPause (void)
 		pic = Draw_GetCachePic ("gfx/menu/paused.lmp", false);
 		if (pic)
 		{
+			M_SetScale (true);
 			val = ((float)pic->height * pause_percent) - pic->height;
 			Draw_Pic ( (vid.width - pic->width) / 2, val, pic);
+			M_SetScale (false);
 			return;
 		}
 	}
@@ -1047,7 +1049,9 @@ void SCR_DrawPause (void)
 		pic = Draw_GetCachePic ("gfx/pause.lmp", false);
 		if (pic)
 		{
+			M_SetScale (true);
 			Draw_Pic ((vid.width - pic->width) / 2, (vid.height - 48 - pic->height) / 2, pic);
+			M_SetScale (false);
 			return;
 		}
 	}
@@ -1101,6 +1105,8 @@ void SCR_DrawLoading (void)
 {
 	mpic_t	*pic;
 
+	M_SetScale (true);
+
 #ifdef HEXEN2_SUPPORT
 	if (hexen2)
 	{
@@ -1133,6 +1139,8 @@ void SCR_DrawLoading (void)
 	}
 	else
 		M_Print ((vid.width - 48) / 2, (vid.height - 54) / 2, "Loading...");
+
+	M_SetScale (false);
 }
 
 void SCR_UpdateLoadCaption (const char *caption)

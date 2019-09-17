@@ -1623,6 +1623,8 @@ void Sbar_IntermissionOverlay (void)
 		return;
 	}
 
+	Sbar_SetScale (true);
+
 	xofs = (vid.width - 320) >> 1;
 	yofs = (vid.height - 240) >> 1;
 
@@ -1666,6 +1668,9 @@ void Sbar_IntermissionOverlay (void)
 	Draw_TransPic (xofs + 232, yofs + 88, sb_slash);
 	Sbar_IntermissionNumber (xofs + 240, yofs + 88, cl.stats[STAT_TOTALMONSTERS], 3, 0);
 */
+
+	Sbar_SetScale (false);
+
 }
 
 
@@ -1680,9 +1685,11 @@ void Sbar_FinaleOverlay (void)
 
 //	scr_copyeverything = 1;
 
+	Sbar_SetScale (true);
 	pic = Draw_GetCachePic ("gfx/finale.lmp", false);
 	if (pic)
 		Draw_TransPic ((vid.width-pic->width)/2, 16, pic);
+	Sbar_SetScale (false);
 }
 
 #endif		//#ifndef RQM_SV_ONLY
