@@ -539,6 +539,30 @@ void IN_infoPlaqueDown(cmd_source_t src)
 #endif	// #ifdef HEXEN2_SUPPORT
 
 /*
+===============
+IN_BestWeapon
+===============
+*/
+// from JoeQuake
+
+int	weaponstat[7] = {STAT_SHELLS, STAT_SHELLS, STAT_NAILS, STAT_NAILS, STAT_ROCKETS, STAT_ROCKETS, STAT_CELLS};
+
+void IN_BestWeapon (cmd_source_t src)
+{
+	int	i, impulse;
+
+	for (i = 1 ; i < Cmd_Argc() ; i++)
+	{
+		impulse = Q_atoi(Cmd_Argv(i));
+		if (impulse > 0 && impulse < 9 && (impulse == 1 || ((cl.items & (IT_SHOTGUN << (impulse - 2))) && cl.stats[weaponstat[impulse-2]])))
+		{
+			in_impulse = impulse;
+			break;
+		}
+	}
+}
+
+/*
 ============
 CL_InitInput
 ============
@@ -580,6 +604,7 @@ void CL_InitInput (void)
 	Cmd_AddCommand ("-klook", IN_KLookUp, 0);
 	Cmd_AddCommand ("+mlook", IN_MLookDown, 0);
 	Cmd_AddCommand ("-mlook", IN_MLookUp, 0);
+	Cmd_AddCommand ("bestweapon", IN_BestWeapon, 0);
 
 	Cvar_Register (&pq_lag);	// joe: synthetic lag, from ProQuake
 }
