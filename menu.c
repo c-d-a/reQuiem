@@ -49,7 +49,7 @@ extern	cvar_t	vid_vsync, host_maxfps, scr_sshot_format, jpeg_compression_level, 
 extern	cvar_t	gl_texturemode, gl_texbrighten, gl_zfightfix, r_oldsky, r_flatlightstyles, r_modelbrightness, gl_glows, r_powerupglow;
 extern	cvar_t	nosound, sv_entpatch, sv_altnoclip;
 extern	cvar_t	scr_consize, scr_conspeed, gl_conalpha, con_linespacing, con_logcenterprint, gl_consolefont, gl_smoothfont;
-extern	cvar_t	scr_centersbar, scr_sbarsize, scr_hudscale, scr_showspeed, scr_showorigin, scr_showfps, con_notifytime, _con_notifylines, con_autocomplete;
+extern	cvar_t	scr_centersbar, scr_sbarsize, scr_hudscale, scr_showdemoctrl, scr_showspeed, scr_showorigin, scr_showfps, con_notifytime, _con_notifylines, con_autocomplete;
 extern	cvar_t	crosshair, crosshairsize, gl_crosshairalpha, crosshaircolor, gl_crosshairimage, cl_crossx, cl_crossy;
 extern	cvar_t	com_matchfilecase, sv_protocol, host_cutscenehack, sv_fishfix, sv_imp12hack, nospr32;
 extern	cvar_t	v_gunkick, cl_deadbodyfilter, cl_gibfilter, cl_demo_compress, cl_demo_compress_fmt;
@@ -446,14 +446,15 @@ menu_t menu_textures =
 menu_t menu_hud =
 {
 	M_TITLE("HUD Options", "title3"), M_Menu_HUD_f, M_HUD_Draw, NULL/*M_HUD_Key*/,
-		NULL, &menu_video, M_ALIGN_RIGHT, 0, 0, 12,
+		NULL, &menu_video, M_ALIGN_RIGHT, 0, 0, 13,
 	{
 		{      "Solid status bar", NULL, &cl_sbar},
 		{   "Centered status bar", NULL, &scr_centersbar},
 		{       "Status bar size", NULL, &scr_sbarsize, M_ITEM_SLIDER},
 		{   "Weapon transparency", NULL, &r_drawviewmodel, M_ITEM_SLIDER},
-		{           "Weapon size", NULL, &r_viewmodelsize, M_ITEM_SLIDER},
+		{       "Weapon position", NULL, &r_viewmodelsize, M_ITEM_SLIDER},
 		{                      "", NULL, NULL, M_ITEM_DISABLED},
+		{    "Show demo controls", NULL, &scr_showdemoctrl},
 		{     "Show player speed", NULL, &scr_showspeed},
 		{       "Show player pos", NULL, &scr_showorigin},
 		{              "Show FPS", NULL, &scr_showfps},

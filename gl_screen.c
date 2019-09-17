@@ -112,6 +112,7 @@ cvar_t		scr_sshot_format = {"scr_sshot_format", "jpg", CVAR_FLAG_ARCHIVE};
 cvar_t		scr_clock        = {"cl_clock",           "0", CVAR_FLAG_ARCHIVE};
 cvar_t		scr_clock_x      = {"cl_clock_x",         "0", CVAR_FLAG_ARCHIVE};
 cvar_t		scr_clock_y      = {"cl_clock_y",        "-1", CVAR_FLAG_ARCHIVE};
+cvar_t		scr_showdemoctrl = {"scr_showdemoctrl",      "1", CVAR_FLAG_ARCHIVE};
 cvar_t		scr_showspeed    = {"scr_showspeed",      "0", CVAR_FLAG_ARCHIVE};
 cvar_t		scr_showfps      = {"scr_showfps",        "0", CVAR_FLAG_ARCHIVE};
 cvar_t		scr_showorigin   = {"scr_showorigin",     "0", CVAR_FLAG_ARCHIVE};		// JDH
@@ -209,6 +210,7 @@ void SCR_Init (void)
 	Cvar_RegisterInt (&scr_clock, 0, 4);
 	Cvar_RegisterInt (&scr_clock_x, 0, vid.width/8 - 8);
 	Cvar_RegisterInt (&scr_clock_y, -(int)vid.height/8, vid.height/8);		// neg val gives offset from bottom
+	Cvar_RegisterBool (&scr_showdemoctrl);
 	Cvar_RegisterBool (&scr_showspeed);
 	Cvar_RegisterBool (&scr_showfps);
 	Cvar_RegisterBool (&scr_showorigin);		// JDH
@@ -1536,7 +1538,7 @@ void SCR_DrawDemoOverlay (void)
 	int		width, x;
 	float	progress;
 
-	if (!cls.demoplayback || (scr_demo_overlay_time == 0) || cls.capturedemo)
+	if (!scr_showdemoctrl.value || !cls.demoplayback || (scr_demo_overlay_time == 0) || cls.capturedemo)
 		return;
 
 	elapsed = realtime - scr_demo_overlay_time;
