@@ -454,7 +454,7 @@ int GL_LoadCharsetImage (const char *filename, const char *identifier)
 	}
 
 
-	buf = dest = Q_calloc (image_size * 2, 4);
+	/*buf = dest = Q_calloc (image_size * 2, 4);
 	src = data;
 	for (i=0 ; i<16 ; i++)
 	{
@@ -472,6 +472,8 @@ int GL_LoadCharsetImage (const char *filename, const char *identifier)
 	}
 
 	free (buf);
+	free (data);*/
+	texnum = GL_LoadTexture (identifier, image_width, image_height, data, TEX_ALPHA, 4);
 	free (data);
 
 	return texnum;
@@ -522,7 +524,7 @@ static qboolean Draw_LoadConchars (const byte *data, int width, int height, int 
 	charwidth = width/cols;
 	charheight = height/rows;
 
-	if ((width*2 <= gl_max_size.value) && (height*2 <= gl_max_size.value))
+/*	if ((width*2 <= gl_max_size.value) && (height*2 <= gl_max_size.value))
 	{
 	// Double the texture's width and height, leaving empty space between chars
 	// so that they don't stumble on each other because of texture smoothing.
@@ -552,7 +554,7 @@ static qboolean Draw_LoadConchars (const byte *data, int width, int height, int 
 		height *= 2;
 		charset_hspacing = charset_vspacing = 2.0;
 	}
-	else
+	else */
 	{
 		newsize = width*height;
 		buf = (byte *) data;
