@@ -168,6 +168,13 @@ cvar_t	r_novis      = {"r_novis",      "0"};
 cvar_t	r_showbboxes = {"r_showbboxes", "0"};			// from Fitz
 cvar_t	r_oldsky     = {"r_oldsky",     "0", CVAR_FLAG_ARCHIVE};
 cvar_t	gl_glows     = {"gl_glows",     "1", CVAR_FLAG_ARCHIVE};				// from nehahra
+cvar_t	gl_glows_flame  = {"gl_glows_flame",  "1", CVAR_FLAG_ARCHIVE};
+cvar_t	gl_glows_candle = {"gl_glows_candle", "1", CVAR_FLAG_ARCHIVE};
+cvar_t	gl_glows_shaft  = {"gl_glows_shaft",  "1", CVAR_FLAG_ARCHIVE};
+cvar_t	gl_glows_rocket = {"gl_glows_rocket", "1", CVAR_FLAG_ARCHIVE};
+cvar_t	gl_glows_quad   = {"gl_glows_quad",   "1", CVAR_FLAG_ARCHIVE};
+cvar_t	gl_glows_pent   = {"gl_glows_pent",   "1", CVAR_FLAG_ARCHIVE};
+
 cvar_t	gl_cache_ms2 = {"gl_cache_ms2", "0", CVAR_FLAG_ARCHIVE};
 cvar_t	gl_lightmode = {"gl_lightmode", "1", CVAR_FLAG_ARCHIVE, OnChange_lightmaps};
 cvar_t	gl_zfightfix = {"gl_zfightfix", "0", CVAR_FLAG_ARCHIVE};
@@ -1487,6 +1494,12 @@ void R_Init (void)
 	Cvar_RegisterInt   (&r_showbboxes, 0, 3);
 	Cvar_RegisterBool  (&r_oldsky);
 	Cvar_RegisterBool  (&gl_glows);
+	Cvar_RegisterBool  (&gl_glows_flame);
+	Cvar_RegisterBool  (&gl_glows_candle);
+	Cvar_RegisterBool  (&gl_glows_shaft);
+	Cvar_RegisterBool  (&gl_glows_rocket);
+	Cvar_RegisterBool  (&gl_glows_quad);
+	Cvar_RegisterBool  (&gl_glows_pent);
 	Cvar_RegisterBool  (&gl_cache_ms2);
 	Cvar_RegisterInt   (&gl_lightmode, 0, 3);
 	Cvar_RegisterInt   (&gl_skyclip, 4096, 16384);

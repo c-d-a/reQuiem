@@ -42,6 +42,9 @@ float	r_avertexnormals[NUMVERTEXNORMALS][3] = {
 extern	int	player_skins[MAX_SCOREBOARD];
 extern	int	player_skins_fb[MAX_SCOREBOARD];
 
+extern	cvar_t	gl_fogenable;
+extern	cvar_t	gl_fogdensity;
+
 vec3_t	shadevector;
 
 //qboolean full_light;
@@ -63,6 +66,7 @@ vec3_t	vertexlight;
 extern cvar_t	gl_ringalpha;
 extern cvar_t	gl_glows;
 
+extern cvar_t	gl_glows_flame, gl_glows_candle, gl_glows_shaft, gl_glows_rocket, gl_glows_quad, gl_glows_pent;
 
 #define INTERP_WEAP_MAXNUM		24
 
@@ -180,17 +184,49 @@ void GL_DrawAliasGlow (entity_t *currententity, model_t *clmodel)
 	float     intensity;              // Intensity of torch flare.
 	int	      i, j;
 
-	if (clmodel->modhint != MOD_THUNDERBOLT) return;
-		// JDH: nehahra also did glows for quad, pent & rocket; I don't.
+	if ((clmodel->modhint != MOD_GLOWS) && \
+		(clmodel->modhint != MOD_CANDLES) && \
+		(clmodel->modhint != MOD_FLAME) && \
+		(clmodel->modhint != MOD_THUNDERBOLT))
+		{ return; }
 
 	VectorCopy(currententity->origin, lightorigin);
 
-	radius = 30.0f;
+	if ( (clmodel->modhint == MOD_FLAME) && gl_glows_flame.value )
+		radius = 30.0;
+	else if ( (clmodel->modhint == MOD_CANDLES) && gl_glows_candle.value )
+		radius = 15.0;
+	else if (!strncmp (clmodel->name, "progs/lantern.mdl", 13) && gl_glows_candle.value )
+		radius = 25.0;
+	else if (!strcmp (clmodel->name, "progs/missile.mdl") && gl_glows_rocket.value )
+	{
+		if (currententity->forcelink)
+			radius = 80.0;
+                else
+			radius = 20.0;
+	}
+	else if ( (clmodel->modhint == MOD_THUNDERBOLT) && gl_glows_shaft.value )
+		radius = 30.0;
+	else if ( !strcmp (clmodel->name, "progs/quaddama.mdl") && gl_glows_quad.value )
+		radius = 50.0;
+	else if ( !strcmp (clmodel->name, "progs/invulner.mdl") && gl_glows_pent.value )
+		radius = 50.0;
+	else
+		return;
 
 	VectorSubtract(lightorigin, r_origin, v);
 
 	// See if view is outside the light.
-    distance = VectorLength(v);
+	distance = VectorLength(v);
+
+	if (gl_fogenable.value)
+	{
+		float att_begin = 512;
+		float att_end = att_begin + 256 + 768 * (1 - gl_fogdensity.value);
+		// Attenuate radius in fog
+		radius *= (att_end - min(max(distance, att_begin), att_end)) / (att_end - att_begin);
+	}
+
 	if (distance > radius)
 	{
 		glDepthMask (0);
@@ -200,9 +236,40 @@ void GL_DrawAliasGlow (entity_t *currententity, model_t *clmodel)
 		glBlendFunc (GL_ONE, GL_ONE);
 
 		glPushMatrix();
+
+		if (clmodel->modhint == MOD_FLAME)
+			glTranslatef(0.0f, 0.0f, 10.0f);
+		else if (clmodel->modhint == MOD_CANDLES)
+			glTranslatef(0.0f, 0.0f, clmodel->maxs[2] - 3.0f); //was -5.0f
+		else if (!strncmp (clmodel->name, "progs/lantern.mdl", 13))
+			glTranslatef (0.0f, 0.0f, clmodel->maxs[2] - 35.0f);
+		else if (!strcmp (clmodel->name, "progs/missile.mdl"))
+		{
+			//move the glow behind the rocket
+			glTranslatef (cos( currententity->angles[1]/180*M_PI)*(-20.0f),
+			sin( currententity->angles[1]/180*M_PI)*(-20.0f),
+			sin( currententity->angles[0]/180*M_PI)*(-20.0f));
+		}
+		else if (!strcmp (clmodel->name, "progs/quaddama.mdl") || \
+					!strcmp (clmodel->name, "progs/invulner.mdl"))
+			glTranslatef(0.0f, 0.0f, 20.0f);
+
 		glBegin(GL_TRIANGLE_FAN);
 
-		intensity = 0.2f;
+		// Invert (fades as you approach) - if we are a torch
+		if ((clmodel->modhint == MOD_FLAME) || \
+			(clmodel->modhint == MOD_CANDLES) || \
+			!strncmp (clmodel->name, "progs/lantern.mdl", 13) )
+		{
+			intensity = 1 - (1024 - min(distance, 1024.0)) / 1024.0f;
+		}
+		else if (clmodel->modhint == MOD_THUNDERBOLT)
+			intensity = 0.2f;
+		else if (!strcmp (clmodel->name, "progs/missile.mdl"))
+			intensity = 0.4f;
+		else if (!strcmp (clmodel->name, "progs/quaddama.mdl") || \
+					!strcmp (clmodel->name, "progs/invulner.mdl"))
+			intensity = 0.3f;
 
 		// Now modulate with flicker.
         i = (int)(cl.time*10);
@@ -216,9 +283,26 @@ void GL_DrawAliasGlow (entity_t *currententity, model_t *clmodel)
 		}
 		intensity *= ((float)j / 255.0f);
 
-		// Set yellow intensity
-
-		glColor3f(0.2f*intensity, 0.2f*intensity, 0.8f*intensity);
+		//set the colour of the glow
+		if ((clmodel->modhint == MOD_FLAME) || \
+			(clmodel->modhint == MOD_CANDLES) || \
+			!strncmp (clmodel->name, "progs/lantern.mdl", 13) )
+		{
+			glColor3f(0.4f*intensity, 0.2f*intensity, 0.05f*intensity);
+		}
+		else if (!strcmp (clmodel->name, "progs/missile.mdl"))
+			glColor3f(0.9f*intensity, 0.2f*intensity, 0.1f*intensity);
+		else if (clmodel->modhint == MOD_THUNDERBOLT)
+			glColor3f(0.2f*intensity, 0.2f*intensity, 0.8f*intensity);
+		else if (!strcmp (clmodel->name, "progs/quaddama.mdl"))
+		{
+			if (nehahra)
+				glColor3f (0.8f*intensity, 0.8f*intensity, 0.1f*intensity);
+			else
+				glColor3f (0.1f*intensity, 0.1f*intensity, 0.8f*intensity);
+		}
+		else if (!strcmp (clmodel->name, "progs/invulner.mdl"))
+			glColor3f(0.8f*intensity, 0.1f*intensity, 0.1f*intensity);
 
 		for (i=0 ; i<3 ; i++)
 			v[i] = lightorigin[i] - vpn[i]*radius;

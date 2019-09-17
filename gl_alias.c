@@ -297,6 +297,10 @@ static const char * mod_heads[] =
 	"h_ogre", "h_demon", "h_shal", "h_shams",  "h_zombie", "h_player", NULL
 };
 
+static const char * mod_glows[] = {"lantern", "lantern0", "missile", "quaddama", "invulner", NULL};
+
+static const char * mod_candles[] = {"candle_t", "candle_w", "candleth", "candlews", NULL}; //nehahra
+
 static const aliastype_t mod_hints[] =
 {
 	{MOD_EYES,        mod_eyes},
@@ -306,7 +310,9 @@ static const aliastype_t mod_hints[] =
 	{MOD_LAVABALL,    mod_lavaballs},
 	{MOD_SPIKE,       mod_spikes},
 	{MOD_SHAMBLER,    mod_shamblers},
-	{MOD_HEAD,        mod_heads}
+	{MOD_HEAD,        mod_heads},
+	{MOD_GLOWS,       mod_glows},
+	{MOD_CANDLES,     mod_candles}
 };
 #define NUM_ALIAS_HINTS (sizeof(mod_hints)/sizeof(mod_hints[0]))
 

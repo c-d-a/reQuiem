@@ -420,8 +420,7 @@ typedef enum {mod_brush, mod_sprite, mod_alias, mod_md3 /*this is added for md3*
 //typedef enum {mod_brush, mod_sprite, mod_alias} modtype_t;
 
 // some models are special
-typedef enum {MOD_NORMAL, MOD_PLAYER, MOD_EYES, MOD_FLAME, MOD_THUNDERBOLT, MOD_WEAPON,
-		MOD_LAVABALL, MOD_SPIKE, MOD_SHAMBLER, MOD_HEAD, MOD_SPR, MOD_SPR32} modhint_t;
+typedef enum {MOD_NORMAL, MOD_PLAYER, MOD_EYES, MOD_FLAME, MOD_THUNDERBOLT, MOD_WEAPON, MOD_LAVABALL, MOD_SPIKE, MOD_SHAMBLER, MOD_HEAD, MOD_SPR, MOD_SPR32, MOD_GLOWS, MOD_CANDLES} modhint_t;
 
 // entity flags:
 #define	EF_ROCKET	1			// leave a trail

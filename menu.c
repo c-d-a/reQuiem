@@ -54,6 +54,7 @@ extern	cvar_t	crosshair, crosshairsize, gl_crosshairalpha, crosshaircolor, gl_cr
 extern	cvar_t	com_matchfilecase, sv_protocol, host_cutscenehack, sv_fishfix, sv_imp12hack, nospr32;
 extern	cvar_t	v_gunkick, cl_deadbodyfilter, cl_gibfilter, cl_demo_compress, cl_demo_compress_fmt;
 extern	cvar_t	r_particles;
+extern	cvar_t	gl_glows_flame, gl_glows_candle, gl_glows_shaft, gl_glows_rocket, gl_glows_quad, gl_glows_pent;
 
 static const char **gMenuSounds = MenuSoundsDefault;
 
@@ -480,7 +481,7 @@ menu_t menu_crosshair =
 menu_t menu_lighting =
 {
 	M_TITLE("Lighting Options", "title3"), M_Menu_Lighting_f, M_Lighting_Draw, NULL/*M_Lighting_Key*/, NULL,
-		&menu_video, M_ALIGN_RIGHT, 0, 0, 13,
+		&menu_video, M_ALIGN_RIGHT, 0, 0, 20,
 	{
 		{     "World light style", NULL, &gl_lightmode},
 		{        "Colored lights", NULL, &gl_loadlitfiles},
@@ -490,11 +491,18 @@ menu_t menu_lighting =
 		{               "Shadows", NULL, &r_shadows, M_ITEM_SLIDER},
 		{       "Vertex lighting", NULL, &gl_vertexlights},
 		{                      "", NULL, NULL, M_ITEM_DISABLED},
-		{        "Lightning glow", NULL, &gl_glows},
-		{           "Other glows", NULL, &gl_flashblend},
+		{         "Spheric glows", NULL, &gl_flashblend, M_ITEM_WHITE},
 		{   "Player powerup glow", NULL, &r_powerupglow},
-		{            "Glow color", NULL, &r_explosionlightcolor},
-		{           "Glow radius", NULL, &r_explosionlight, M_ITEM_SLIDER}
+		{  "Explosion glow color", NULL, &r_explosionlightcolor},
+		{ "Explosion glow radius", NULL, &r_explosionlight, M_ITEM_SLIDER},
+		{                      "", NULL, NULL, M_ITEM_DISABLED},
+		{          "Custom glows", NULL, &gl_glows, M_ITEM_WHITE},
+		{           "Flame glows", NULL, &gl_glows_flame},
+		{       "Lightning glows", NULL, &gl_glows_shaft},
+		{          "Candle glows", NULL, &gl_glows_candle},
+		{          "Rocket glows", NULL, &gl_glows_rocket},
+		{            "Quad glows", NULL, &gl_glows_quad},
+		{       "Pentagram glows", NULL, &gl_glows_pent}
 	}
 };
 
@@ -4390,9 +4398,20 @@ char *expl_colors[5] =
 char *m_glow_warning[] =
 {
 	"0" "* ",
-	"1" "Requires \"Other glows\" to be on",
+	"1" "Requires \"Spheric glows\" to be on",
 /*	"1" "Requires ",
-	"0" "\"Other glows\"",
+	"0" "\"Spheric glows\"",
+	"1" " to be ",
+	"0" "on",*/
+	NULL
+};
+
+char *m_custom_glow_warning[] =
+{
+	"0" "* ",
+	"1" "Requires \"Custom glows\" to be on",
+/*	"1" "Requires ",
+	"0" "\"Custom glows\"",
 	"1" " to be ",
 	"0" "on",*/
 	NULL
@@ -4430,14 +4449,22 @@ void M_Lighting_DrawVar (cvar_t *cvar, int y, qboolean selected)
 	{
 		M_DrawCheckbox (M_VARLEFT, y, cvar->value);
 
-		if ((cvar == &r_powerupglow) && selected && cvar->value && !gl_flashblend.value)
+		if ( selected && cvar->value && ( \
+			(!gl_flashblend.value && (cvar == &r_powerupglow)) || \
+			(!gl_glows.value && ( \
+				(cvar == &gl_glows_flame) || (cvar == &gl_glows_candle) || \
+				(cvar == &gl_glows_shaft) || (cvar == &gl_glows_rocket) || \
+				(cvar == &gl_glows_quad) || (cvar == &gl_glows_pent) ) ) ) )
 		{
 			M_PrintWhite (M_VARLEFT+20, y, "*");
 
 			x = 3;		// (320-DRAW_CHARWIDTH*strlen(m_glow_warning))/2
 			for (i = 0; ; i++)
 			{
-				str = m_glow_warning[i];
+				if (cvar == &r_powerupglow)
+					str = m_glow_warning[i];
+				else
+					str = m_custom_glow_warning[i];
 				if (!str) break;
 
 				if (*str == '0')
