@@ -32,8 +32,10 @@ typedef unsigned char 		byte;
 
 #if defined(_WIN32) && defined(_MSC_VER)
 #  define QINT64 __int64
-#else
+#elif defined(_BITS_TYPES_H)
 #  define QINT64 __S64_TYPE
+#else
+#  define QINT64 long long
 #endif
 
 #undef	true
