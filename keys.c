@@ -123,6 +123,8 @@ keyname_t keynames[] =
 	{K_MOUSE1, "MOUSE1"},
 	{K_MOUSE2, "MOUSE2"},
 	{K_MOUSE3, "MOUSE3"},
+	{K_MOUSE4, "MOUSE4"},
+	{K_MOUSE5, "MOUSE5"},
 
 	{K_JOY1, "JOY1"},
 	{K_JOY2, "JOY2"},
@@ -726,6 +728,9 @@ void Key_Init (void)
 	consolekeys[K_MOUSE1] = true;
 	consolekeys[K_MOUSE2] = true;
 	consolekeys[K_MOUSE3] = true;
+
+	consolekeys[K_MOUSE4] = true;
+	consolekeys[K_MOUSE5] = true;
 
 #ifndef _WIN32
 //	consolekeys[22] = true;		// JDH: on Linux, ctrl+v sends keypress of 22

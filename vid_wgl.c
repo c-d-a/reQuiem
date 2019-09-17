@@ -36,6 +36,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define NO_MODE			(MODE_WINDOWED - 1)
 #define MODE_FULLSCREEN_DEFAULT	(MODE_WINDOWED + 1)
 
+#ifndef WM_XBUTTONDOWN
+   #define WM_XBUTTONDOWN      0x020B
+   #define WM_XBUTTONUP      0x020C
+#endif
+#ifndef MK_XBUTTON1
+   #define MK_XBUTTON1         0x0020
+#endif
+#ifndef MK_XBUTTON2
+   #define MK_XBUTTON2         0x0040
+#endif
+
 typedef struct {
 	modestate_t	type;
 	int		width;
@@ -876,6 +887,8 @@ LONG WINAPI MainWndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_MBUTTONDOWN:
 		case WM_MBUTTONUP:
 		case WM_MOUSEMOVE:
+		case WM_XBUTTONDOWN:
+		case WM_XBUTTONUP:
 			temp = 0;
 
 			if (wParam & MK_LBUTTON)
@@ -886,6 +899,12 @@ LONG WINAPI MainWndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			if (wParam & MK_MBUTTON)
 				temp |= 4;
+
+			if (wParam & MK_XBUTTON1)
+				temp |= 8;
+
+			if (wParam & MK_XBUTTON2)
+				temp |= 16;
 
 			IN_MouseEvent (temp);
 			break;

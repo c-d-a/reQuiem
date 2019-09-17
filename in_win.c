@@ -701,7 +701,7 @@ void IN_StartupMouse (void)
 		}
 	}
 
-	mouse_buttons = 3;
+	mouse_buttons = 5;
 
 // if a fullscreen video mode was set before the mouse was initialized,
 // set the mouse state appropriately
