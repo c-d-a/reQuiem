@@ -92,7 +92,7 @@ cvar_t	r_skybox = {"r_skybox", "", 0, OnChange_r_skybox};
 cvar_t  gl_interpolate_animation = {"gl_interpolate_animation", "1", CVAR_FLAG_ARCHIVE};
 cvar_t  gl_interpolate_transform = {"gl_interpolate_transform", "1", CVAR_FLAG_ARCHIVE};
 
-cvar_t	gl_clear            = {"gl_clear",                      "0", CVAR_FLAG_ARCHIVE};
+cvar_t	gl_clear            = {"gl_clear",                      "1", CVAR_FLAG_ARCHIVE};
 cvar_t	gl_cull             = {"gl_cull",                       "1", CVAR_FLAG_ARCHIVE};
 //cvar_t	gl_ztrick           = {"gl_ztrick",                     "1", CVAR_FLAG_ARCHIVE};
 cvar_t	gl_smoothmodels     = {"gl_smoothmodels",               "1", CVAR_FLAG_ARCHIVE};
@@ -1640,7 +1640,7 @@ void R_Clear (void)
 		clear = true;
 		if (cleartogray)
 		{
-			glClearColor (1, 0, 0, 0);
+			glClearColor (0, 0, 0, 0);
 			cleartogray = false;
 		}
 	}
