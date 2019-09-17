@@ -278,6 +278,8 @@ extern  cvar_t	gl_part_inferno;
 extern	cvar_t	gl_part_flames;
 extern	cvar_t	gl_part_lightning;
 extern	cvar_t	gl_part_spiketrails;
+extern	cvar_t	gl_part_bubbles;
+extern	cvar_t	gl_part_other;
 
 extern	cvar_t	gl_bounceparticles;
 extern	cvar_t	gl_clipparticles;

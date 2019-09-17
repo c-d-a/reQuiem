@@ -543,7 +543,9 @@ qboolean CL_ParseTEnt (qboolean parse_only)
 			/*if (nehahra)
 				R_SparkShower (pos, vec3_origin, 15, 0);
 			else*/
-				R_RunParticleEffect (pos, vec3_origin, 0, 21*cnt);
+				//R_RunParticleEffect (pos, vec3_origin, 0, 21*cnt);
+				R_RunParticleEffect (pos, vec3_origin, 0, 21);
+				//QMB expects 21
 		}
 		break;
 

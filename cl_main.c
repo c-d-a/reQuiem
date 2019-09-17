@@ -1352,7 +1352,7 @@ void CL_RelinkEntities (void)
 
 		if (qmb_initialized)
 		{
-			if (ent->modelindex == cl_modelindex[mi_bubble])
+			if ((ent->modelindex == cl_modelindex[mi_bubble]) && gl_part_bubbles.value)
 			{
 				if (!cl.paused && cl.oldtime != cl.time)
 					QMB_StaticBubble (ent);

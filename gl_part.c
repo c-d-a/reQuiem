@@ -927,13 +927,20 @@ void R_RunParticleEffect (vec3_t org, vec3_t dir, int color, int count)
 
 	switch (count)
 	{
-	case 10:
-	case 20:
-	case 30:
+	case 9:  //nehahra ng
+	case 20: //sng, knight
+	case 30:	//wiz
 		RunParticleEffect(spikes, org, dir, color, count);
 		break;
-	default:
+	case 10: //vanilla ng, nehahra flames / vents
+		if (nehahra) {RunParticleEffect(other, org, dir, color, count);}
+		else {RunParticleEffect(spikes, org, dir, color, count);}
+		break;
+	case 21:	//gunshots
 		RunParticleEffect(gunshots, org, dir, color, count);
+		break;
+	default:
+		RunParticleEffect(other, org, dir, color, count);
 	}
 }
 

@@ -521,7 +521,7 @@ menu_t menu_skywater =
 menu_t menu_particles =
 {
 	M_TITLE("Particle Options", "title3"), M_Menu_Particles_f, M_Particles_Draw, NULL /*M_Particles_Key*/,
-		NULL, &menu_video, M_ALIGN_RIGHT, 0, 0, 17,
+		NULL, &menu_video, M_ALIGN_RIGHT, 0, 0, 19,
 	{
 		{        "Particle shape", NULL, &r_particles},
 		{      "Bounce particles", NULL, &gl_bounceparticles},
@@ -539,7 +539,9 @@ menu_t menu_particles =
 		{               "Inferno", NULL, &gl_part_inferno},
 		{                "Flames", NULL, &gl_part_flames},
 		{             "Lightning", NULL, &gl_part_lightning},
-		{          "Spike trails", NULL, &gl_part_spiketrails}
+		{          "Spike trails", NULL, &gl_part_spiketrails},
+		{               "Bubbles", NULL, &gl_part_bubbles},
+		{                 "Other", NULL, &gl_part_other}
 	}
 };
 
@@ -4614,7 +4616,9 @@ m_preset_t m_particle_preset_vars[] =
 	{&gl_part_inferno,     {0, 1}},
 	{&gl_part_flames,      {0, 1}},
 	{&gl_part_lightning,   {0, 1}},
-	{&gl_part_spiketrails, {0, 1}}
+	{&gl_part_spiketrails, {0, 1}},
+	{&gl_part_bubbles,     {0, 1}},
+	{&gl_part_other,       {0, 1}}
 };
 
 m_preset_config_t m_particle_configs =

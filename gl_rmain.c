@@ -129,6 +129,8 @@ cvar_t	gl_part_inferno     = {"gl_part_inferno",     "0", CVAR_FLAG_ARCHIVE};
 cvar_t	gl_part_flames      = {"gl_part_flames",      "0", CVAR_FLAG_ARCHIVE};
 cvar_t	gl_part_lightning   = {"gl_part_lightning",   "0", CVAR_FLAG_ARCHIVE};
 cvar_t	gl_part_spiketrails = {"gl_part_spiketrails", "0", CVAR_FLAG_ARCHIVE};
+cvar_t	gl_part_bubbles     = {"gl_part_bubbles",     "0", CVAR_FLAG_ARCHIVE};
+cvar_t	gl_part_other       = {"gl_part_other",       "0", CVAR_FLAG_ARCHIVE};
 
 #ifdef SHINYWATER
   cvar_t  gl_shinywater     = {"gl_shinywater",       "0", CVAR_FLAG_ARCHIVE};			// JT030105 - add reflections
@@ -1470,6 +1472,8 @@ void R_Init (void)
 	Cvar_RegisterBool  (&gl_part_flames);
 	Cvar_RegisterBool  (&gl_part_lightning);
 	Cvar_RegisterBool  (&gl_part_spiketrails);
+	Cvar_RegisterBool  (&gl_part_bubbles);
+	Cvar_RegisterBool  (&gl_part_other);
 
 #ifdef SHINYWATER
 	Cvar_RegisterFloat (&gl_shinywater, 0, 1);		// JT030105 - reflections
