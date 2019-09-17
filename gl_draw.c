@@ -816,7 +816,7 @@ qboolean OnChange_gl_crosshairimage (cvar_t *var, const char *string)
 	namelist[0] = string;
 	namelist[1] = NULL;
 
-	if (!(pic = GL_LoadPicImage_MultiSource (crosshair_pathlist, namelist, "crosshair", TEX_ALPHA, 0)))
+	if (!(pic = GL_LoadPicImage_MultiSource (crosshair_pathlist, namelist, "crosshair", TEX_ALPHA | TEX_NOTILE, 0)))
 	{
 		crosshairimage_loaded = false;
 		if (key_dest != key_menu)
@@ -989,7 +989,7 @@ void Draw_Init (void)
 		for (j = 0; j < 8*8; j++)
 			data24[j] = crosshairdata[i][j] ? MAKEGREY(crosshairdata[i][j]) : 0;
 
-		crosshairtextures[i] = GL_LoadTexture ("", 8, 8, (byte *)data24, TEX_ALPHA, 4);
+		crosshairtextures[i] = GL_LoadTexture ("", 8, 8, (byte *)data24, TEX_ALPHA | TEX_NOTILE, 4);
 		glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
@@ -1624,8 +1624,8 @@ void Draw_Crosshair (void)
 			if (crosshairimage_loaded)
 			{
 				GL_Bind (crosshairpic.texnum);
-				ofs1 = 4 - 4.0 / crosshairpic.width;
-				ofs2 = 4 + 4.0 / crosshairpic.width;
+				ofs1 = crosshairpic.width / 2.0;
+				ofs2 = crosshairpic.height / 2.0;
 				sh = crosshairpic.sh;
 				sl = crosshairpic.sl;
 				th = crosshairpic.th;
@@ -1634,8 +1634,8 @@ void Draw_Crosshair (void)
 			else
 			{
 				GL_Bind (crosshairtextures[(int)crosshair.value-1]);
-				ofs1 = 3.5;
-				ofs2 = 4.5;
+				ofs1 = 4.0;
+				ofs2 = 4.0;
 				tl = sl = 0;
 				sh = th = 1;
 			}
