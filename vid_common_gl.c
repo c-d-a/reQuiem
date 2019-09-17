@@ -263,9 +263,8 @@ void GL_Init (void)
 		GL_SetSwapInterval (vid_vsync.value);		// init to default value
 	}
 
-	glClearColor (0, 0, 0, 0);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_ACCUM_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glClearColor (1, 0, 0, 0);
+	glClearColor (0, 0, 0, 0);
 }
 
 /*void VID_ApplyGammaToPalette (unsigned char *palette)
