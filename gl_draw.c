@@ -2034,7 +2034,7 @@ void Draw_ConsoleBackground (int lines)
 */
 end:
 	sprintf (ver, "reQuiem %s", REQUIEM_VERSION);
-	Draw_Alt_String_Scaled (vid.conwidth - (strlen(ver) + 1) * DRAW_CHARWIDTH, lines - DRAW_CHARHEIGHT - 2, ver, scr_hudscale.value);
+	Draw_Alt_String_Scaled (vid.conwidth - (strlen(ver) + 1) * DRAW_CHARWIDTH*scr_hudscale.value, lines - DRAW_CHARHEIGHT*scr_hudscale.value - 2, ver, scr_hudscale.value);
 }
 
 void Draw_ConbackSolid (void)
