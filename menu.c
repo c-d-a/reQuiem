@@ -1621,7 +1621,10 @@ void M_ShowNehCredits (cmd_source_t src)
 	key_dest = key_game;
 	if (sv.active)
 		Cbuf_AddText ("disconnect\n", src);
-	Cbuf_AddText ("playdemo ENDCRED\n", src);
+	if (NehGameType == NEH_TYPE_DEMO)
+		Cbuf_AddText ("playdemo ENDCRED\n", src);
+	else
+		Cbuf_AddText ("playdemo GAMEEND\n", src);
 }
 
 //=============================================================================
