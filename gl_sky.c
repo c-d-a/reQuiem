@@ -38,6 +38,7 @@ unsigned	r_skytex_width, r_skytex_height;		// JDH
 
 
 extern	cvar_t	gl_skyclip;
+extern	cvar_t	gl_texturemode;
 
 //extern qboolean noclip_anglehack;
 extern cvar_t	r_oldsky;
@@ -693,10 +694,17 @@ void R_InitSky (miptex_t *mt)
 
 	glBindTexture (GL_TEXTURE_2D, solidskytexture);
 
+	for (i=0 ; i<GL_NUM_TEXMODES ; i++)
+	{
+		if (!Q_strcasecmp (gl_texmodes[i].name, gl_texturemode.string))
+			break;
+	}
+	int gl_filter_sky = gl_texmodes[i].maximize;
+
 	glTexImage2D (GL_TEXTURE_2D, 0, gl_solid_format, r_skytex_width, r_skytex_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, trans);
 //	glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, r_skytex_width, r_skytex_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, trans);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_sky);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_sky);
 
 // -----------------
 // alpha sky texture
@@ -767,8 +775,8 @@ void R_InitSky (miptex_t *mt)
 
 	glTexImage2D (GL_TEXTURE_2D, 0, gl_alpha_format, r_skytex_width, r_skytex_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, trans);
 //	glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, r_skytex_width, r_skytex_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, trans);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_sky);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_sky);
 
 	// get fog colours for the sky - we halve these
 	r_skycolor_avg[0] = ((float)r / (float)div) / 512.0;
