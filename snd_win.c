@@ -607,7 +607,7 @@ int SNDDMA_GetDMAPos(void)
 	return s;
 }
 
-byte * SNDDMA_LockBuffer (unsigned *dwSize)
+byte * SNDDMA_LockBuffer (DWORD *dwSize)
 {
 	int		reps;
 	DWORD	dwStatus, dwSize2, *pbuf, *pbuf2;
@@ -655,7 +655,7 @@ byte * SNDDMA_LockBuffer (unsigned *dwSize)
 	}
 }
 	
-void SNDDMA_UnlockBuffer (byte *pbuf, unsigned dwSize)
+void SNDDMA_UnlockBuffer (byte *pbuf, DWORD dwSize)
 {
 	if (pDSBuf)
 	{

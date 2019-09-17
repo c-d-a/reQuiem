@@ -593,13 +593,13 @@ void SNDDMA_Shutdown (void)
 	snd_inited = false;
 }
 
-byte * SNDDMA_LockBuffer (unsigned *size_out)
+byte * SNDDMA_LockBuffer (DWORD *size_out)
 {
 	// *size_out = ????
 	return shm->buffer;
 }
 
-void SNDDMA_UnlockBuffer (byte *pbuf, unsigned dwSize)
+void SNDDMA_UnlockBuffer (byte *pbuf, DWORD dwSize)
 {
 
 }

@@ -172,8 +172,8 @@ sfxcache_t *S_LoadSound (sfx_t *s);
 wavinfo_t GetWavinfo (const char *name, const byte *wav, int wavlength);
 
 void SND_InitScaletable (void);
-byte * SNDDMA_LockBuffer (unsigned *size_out);
-void SNDDMA_UnlockBuffer (byte *pbuf, unsigned size);
+byte * SNDDMA_LockBuffer (DWORD *size_out);
+void SNDDMA_UnlockBuffer (byte *pbuf, DWORD size);
 void SNDDMA_Submit(void);
 
 void S_AmbientOff (void);

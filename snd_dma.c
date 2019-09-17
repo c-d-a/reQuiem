@@ -576,7 +576,7 @@ void S_ClearBuffer (void)
 {
 	int			clear;
 	byte		*pData;
-	unsigned	dwSize;
+	DWORD		dwSize;
 
 	if (!sound_started || !shm)
 		return;
