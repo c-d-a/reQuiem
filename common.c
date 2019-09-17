@@ -24,10 +24,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#define NUM_SAFE_ARGVS  7
 #define NUM_SAFE_ARGVS  5
 
-static	const char	*largv[MAX_NUM_ARGVS + NUM_SAFE_ARGVS + 1];
-static	const char	*argvdummy = " ";
+static	char	*largv[MAX_NUM_ARGVS + NUM_SAFE_ARGVS + 1];
+static	char	*argvdummy = " ";
 
-static const char *safeargvs[NUM_SAFE_ARGVS] =
+static char *safeargvs[NUM_SAFE_ARGVS] =
 {
 //	"-stdvid",
 //	"-dibonly",
@@ -45,7 +45,7 @@ qboolean	msg_suppress_1 = 0;
 
 char	com_token[1024];
 int		com_argc;
-const char	**com_argv;
+char	**com_argv;
 
 #define CMDLINE_LENGTH	256
 char	com_cmdline[CMDLINE_LENGTH];
@@ -926,7 +926,7 @@ COM_InitArgv
 */
 static char	*whitespace = " \t";
 
-void COM_InitArgv (int argc, const char **argv, const char *cmdline)
+void COM_InitArgv (int argc, char **argv, const char *cmdline)
 {
 	int		i;
 	qboolean	safe;

@@ -202,13 +202,13 @@ const char *COM_Parse (const char *data);
 
 
 extern	int	com_argc;
-extern	const char	**com_argv;
+extern	char	**com_argv;
 
 #define COM_CheckParm(p) COM_FindNextParm((p), 1)
 
 int   COM_FindNextParm (const char *parm, int start);
 void  COM_Init (void);
-void  COM_InitArgv (int argc, const char **argv, const char *cmdline);
+void  COM_InitArgv (int argc, char **argv, const char *cmdline);
 void  COM_InitFilesystem (void);
 void *COM_LoadLibrary (const char *name);
 void  COM_UnloadLibrary (void *);

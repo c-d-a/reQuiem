@@ -369,7 +369,7 @@ typedef struct
 {
 	const char	*basedir;
 	int			argc;
-	const char	**argv;
+	char		**argv;
 	void		*membase;
 	int			memsize;
 } quakeparms_t;
