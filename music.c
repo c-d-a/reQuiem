@@ -435,7 +435,7 @@ void Music_PlaySong (cmd_source_t src, const char *name)
 #endif
 
 		qFMUSIC_PlaySong (music_mod);
-		Con_Printf ("Playing audio track %s\n", name);
+		Con_DPrintf ("Playing audio track %s\n", name);
 	}
 	else
 	{
@@ -515,7 +515,7 @@ qboolean Music_PlaySound (cmd_source_t src, const char *names[], qboolean loop)
 	else
 		dir = fileinfo.searchpath->dir_name;
 	
-	Con_Printf ("Playing audio track %s from %s\n", COM_SkipPath(fileinfo.name), dir);
+	Con_DPrintf ("Playing audio track %s from %s\n", COM_SkipPath(fileinfo.name), dir);
 	music_paused = false;
 	return true;
 }

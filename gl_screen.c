@@ -1134,7 +1134,7 @@ void SCR_DrawLoading (void)
 	{
 		Draw_Pic ((vid.width - pic->width) / 2, (vid.height - 48 - pic->height) / 2, pic);
 
-		if (scr_loadcaption)
+		if (scr_loadcaption && developer.value)
 			Draw_String ((vid.width - strlen(scr_loadcaption)*8)/2, (vid.height - 40 + pic->height)/2, scr_loadcaption);
 	}
 	else

@@ -1593,7 +1593,7 @@ byte *GL_LoadImage_MultiSource (const char *paths[], const char *filenames[], in
 				c = fileinfo.searchpath->pack->filename + strlen(com_basedir)+1;	// just gamedir+pak
 			else
 				c = (char *) fileinfo.searchpath->dir_name;
-			Con_Printf ("Loaded %s from %s\n", COM_SkipPath (fileinfo.name), c);
+			Con_DPrintf ("Loaded %s from %s\n", COM_SkipPath (fileinfo.name), c);
 			fclose (f);
 			return data;
 		}
