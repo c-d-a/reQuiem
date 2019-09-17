@@ -1862,12 +1862,15 @@ int SCR_ModalMessage (const char *text, const char *input_keys)
 	while (1)
 	{
 	// JDH: now updates screen regularly (otherwise screen is blank if you alt-tab out)
+		/*
 		newtime = Sys_DoubleTime ();
 		if (newtime-oldtime >= 0.1)
 		{
 			SCR_UpdateScreen ();
 			oldtime = newtime;
 		}
+		*/
+		SCR_UpdateScreen ();
 
 		key_count = -3;		// purge keyup events, then wait for a key down
 		Sys_SendKeyEvents ();
