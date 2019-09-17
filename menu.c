@@ -5302,11 +5302,15 @@ qboolean M_Demos_Key (int k, qboolean down)
 //=============================================================================
 /* QUIT MENU */
 
+extern cvar_t cl_confirmquit;
 menu_t *m_wascurrent;		// so we don't lose our place in the "real" menus
 keydest_t m_was_keydest;
 
 void M_Menu_Quit_f (cmd_source_t src)
 {
+	if (!cl_confirmquit.value)
+		Host_Quit ();
+
 	if (menu_current != &menu_quit)
 	{
 		menu_quit.parentmenu = ((key_dest == key_menu) ? menu_current : NULL);
