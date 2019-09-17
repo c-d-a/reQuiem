@@ -657,6 +657,7 @@ void VID_Shutdown (void)
 		hRC = wglGetCurrentContext ();
 		hDC = wglGetCurrentDC ();
 
+		glFinish();
 		wglMakeCurrent (NULL, NULL);
 
 		if (hRC)
