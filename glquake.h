@@ -46,6 +46,9 @@ extern	int	texture_extension_number;
 #define TEX_NOTILE			0x0200
 #define TEX_NOFILTER		0x0400		// doesn't obey gl_texturemode
 
+// just to be on the safe side, can probably replace with TEX_NOFILTER
+#define TEX_NEAREST		0x0800
+
 #ifdef HEXEN2_SUPPORT
 #  define TEX_ALPHA_MODE1	0x1000
 #  define TEX_ALPHA_MODE2	0x2000

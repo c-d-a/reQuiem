@@ -34,6 +34,9 @@ static	int		r_numparticles;
 
 vec3_t			r_pright, r_pup, r_ppn;
 
+qboolean OnChange_r_particles (cvar_t *var, const char *string);
+cvar_t	r_particles = {"r_particles", "1", CVAR_FLAG_ARCHIVE, OnChange_r_particles};
+
 static void Classic_LoadParticleTexture (void)
 {
 	int		i, x, y;
@@ -51,12 +54,12 @@ static void Classic_LoadParticleTexture (void)
 	for (i=0 ; i<32*32 ; i++)
 		((unsigned *)data)[i] = 0x00FFFFFF;
 
-	// draw a circle in the top left corner
+	// draw a square or a circle in the top left corner
 	for (x=0 ; x<16 ; x++)
 	{
 		for (y=0 ; y<16 ; y++)
 		{
-			if ((x - 7.5) * (x - 7.5) + (y - 7.5) * (y - 7.5) <= 8 * 8)
+			if ( (r_particles.value == 2) || ((x - 7.5) * (x - 7.5) + (y - 7.5) * (y - 7.5) <= 8 * 8) )
 				data[y][x] = 0xFFFFFFFF;	// solid white
 		}
 	}
@@ -65,7 +68,21 @@ static void Classic_LoadParticleTexture (void)
 //	glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 //	glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	x = y = 32;
-	GL_Upload32 (NULL, (unsigned *)data, &x, &y, TEX_MIPMAP | TEX_ALPHA);
+	if (r_particles.value == 2)
+	{
+		GL_Upload32 (NULL, (unsigned *)data, &x, &y, TEX_NEAREST | TEX_ALPHA);
+	}
+	else
+	{
+		GL_Upload32 (NULL, (unsigned *)data, &x, &y, TEX_MIPMAP | TEX_ALPHA);
+	}
+}
+
+qboolean OnChange_r_particles (cvar_t *var, const char *string)
+{
+	var->value = atof (string);
+	Classic_LoadParticleTexture ();
+	return false;		// allow change
 }
 
 /*
@@ -716,7 +733,7 @@ void Classic_DrawParticles (void)
 	vec3_t			up, right;
 	float			dist, scale, r_partscale;
 
-	if (!active_particles)
+	if (!active_particles || !r_particles.value)
 		return;
 
 	r_partscale = 0.004 * tan(r_refdef.fov_x * (M_PI / 180) * 0.5f);
@@ -859,6 +876,7 @@ void Classic_DrawParticles (void)
 
 void R_InitParticles (void)
 {
+	Cvar_RegisterInt (&r_particles, 0, 2);
 	Classic_InitParticles ();
 	QMB_InitParticles ();
 }

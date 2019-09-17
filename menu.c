@@ -53,6 +53,7 @@ extern	cvar_t	scr_centersbar, scr_sbarsize, scr_hudscale, scr_notifyscale, scr_s
 extern	cvar_t	crosshair, crosshairsize, gl_crosshairalpha, crosshaircolor, gl_crosshairimage, cl_crossx, cl_crossy;
 extern	cvar_t	com_matchfilecase, sv_protocol, host_cutscenehack, sv_fishfix, sv_imp12hack, nospr32;
 extern	cvar_t	v_gunkick, cl_deadbodyfilter, cl_gibfilter, cl_demo_compress, cl_demo_compress_fmt;
+extern	cvar_t	r_particles;
 
 static const char **gMenuSounds = MenuSoundsDefault;
 
@@ -520,8 +521,9 @@ menu_t menu_skywater =
 menu_t menu_particles =
 {
 	M_TITLE("Particle Options", "title3"), M_Menu_Particles_f, M_Particles_Draw, NULL /*M_Particles_Key*/,
-		NULL, &menu_video, M_ALIGN_RIGHT, 0, 0, 16,
+		NULL, &menu_video, M_ALIGN_RIGHT, 0, 0, 17,
 	{
+		{        "Particle shape", NULL, &r_particles},
 		{      "Bounce particles", NULL, &gl_bounceparticles},
 		{        "Clip particles", NULL, &gl_clipparticles},
 		{                      "", NULL, NULL, M_ITEM_DISABLED},
@@ -4591,6 +4593,7 @@ qboolean M_SkyWater_Key (int k, qboolean down)
 //=============================================================================
 /* PARTICLES MENU */
 
+static const char *particle_shapes[3] = {"None", "Round", "Square"};
 static const char *particle_types[3] = {"Classic", "QMB", "QMB (alt)"};
 
 extern qboolean qmb_initialized;
@@ -4661,7 +4664,11 @@ void M_Particles_DrawVar (cvar_t *cvar, int y, qboolean selected)
 	}
 	else
 	{
-		if (cvar == &gl_part_explosions)
+		if (cvar == &r_particles)
+		{
+			str = ((val < 0) || (val > 2)) ? "Invalid Value" : particle_shapes[val];
+		}
+		else if (cvar == &gl_part_explosions)
 		{
 			str = ((val < 0) || (val > 2)) ? "Invalid Value" : particle_types[val];
 		}

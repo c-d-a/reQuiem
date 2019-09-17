@@ -882,6 +882,12 @@ void GL_Upload32 (gltexture_t *glt, const unsigned *data, int *width, int *heigh
 		glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_max);
 	}
 
+	if (texflags & TEX_NEAREST)
+	{
+		glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	}
+
 	texval = (texflags & TEX_NOTILE) ? GL_CLAMP : GL_REPEAT;		// JDH
 	glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texval);
 	glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texval);
