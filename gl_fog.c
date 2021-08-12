@@ -351,7 +351,7 @@ void Fog_SetupFrame (void)
 		glFogi (GL_FOG_MODE, GL_EXP2);
 
 //		d /= (nehahra ? 100.0 : 64.0);
-		d /= 90.0;
+		d /= (nehahra ? 100.0 : 90.0);
 		glFogf (GL_FOG_DENSITY, d);
 #endif
 
