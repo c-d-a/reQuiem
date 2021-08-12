@@ -99,8 +99,8 @@ $(GLX_C_OBJS): $(GLX_DIR)/%.o: %.c quakedef.h
 $(GLX_S_OBJS): $(GLX_DIR)/%.o: %.s
 	$(S_BUILD)
 
-$(GLX_DIR)/resource.o: resource.rc quake.ico
-	windres resource.rc $(GLX_DIR)/resource.o
+$(GLX_DIR)/resource.o: quake.rc quake.ico icon2.ico
+	windres quake.rc $(GLX_DIR)/resource.o
 
 glxclean: _FILES += $(GLX_C_OBJS) $(GLX_S_OBJS) $(GLX_DIR)/resource.o
 glxclean: _DIRS := $(GLX_DIR)
