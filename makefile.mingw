@@ -38,7 +38,7 @@ RM_DIRS = rd $(GLX_DIR)
 $(GLX_DIR):
 	$(MKDIR)
 
-CFLAGS += -Did386 -O3 -D_WIN32 -march=pentium -fomit-frame-pointer -DNDEBUG
+CFLAGS += -Did386 -O3 -D_WIN32 -march=pentium -fcommon -fomit-frame-pointer -DNDEBUG
 LDFLAGS := -lm
 
 #######
