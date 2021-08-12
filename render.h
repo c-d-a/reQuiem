@@ -88,6 +88,7 @@ typedef struct entity_s
 	int				abslight;		// for Alias models
 	byte			colorshade;
 #endif
+	qboolean	glow;
 } entity_t;
 
 // !!! if this is changed, it must be changed in asm_draw.h too !!!

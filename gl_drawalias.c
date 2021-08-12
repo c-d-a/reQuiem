@@ -184,12 +184,6 @@ void GL_DrawAliasGlow (entity_t *currententity, model_t *clmodel)
 	float     intensity;              // Intensity of torch flare.
 	int	      i, j;
 
-	if ((clmodel->modhint != MOD_GLOWS) && \
-		(clmodel->modhint != MOD_CANDLES) && \
-		(clmodel->modhint != MOD_FLAME) && \
-		(clmodel->modhint != MOD_THUNDERBOLT))
-		{ return; }
-
 	VectorCopy(currententity->origin, lightorigin);
 
 	if ( (clmodel->modhint == MOD_FLAME) && gl_glows_flame.value )
@@ -1758,6 +1752,8 @@ void R_DrawAliasModel (entity_t *ent)
 	maliasframedesc_t	*currframe;
 	skin_t				*skin;
 
+    ent->glow = false;
+
 	/*if (!gl_notrans.value)	// always true if not -nehahra
 	{
 		r_modelalpha = ent->transparency;
@@ -1854,10 +1850,12 @@ void R_DrawAliasModel (entity_t *ent)
 
 	glPopMatrix ();
 
-
-// JDH: from nehBJP
-	if (gl_glows.value)
-		GL_DrawAliasGlow (ent, clmodel);
+	if (gl_glows.value && \
+		((clmodel->modhint == MOD_GLOWS) || \
+		(clmodel->modhint == MOD_CANDLES) || \
+		(clmodel->modhint == MOD_FLAME) || \
+		(clmodel->modhint == MOD_THUNDERBOLT)) )
+	{ent->glow = true;}
 
 	if (r_shadows.value && !noshadow && (ent != &cl.viewent))
 	{

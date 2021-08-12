@@ -685,18 +685,30 @@ void R_DrawEntitiesOnList (void)
 	}
 }
 
+
+typedef struct distent_s
+{
+	float	 dist;
+	entity_t *ent;
+} distent_t;
+
+static int distcomp (const void *arg1, const void *arg2)
+{
+	return ((distent_t *)arg2)->dist - ((distent_t *)arg1)->dist;
+}
+
 /*
 =============
 R_DrawTransEntities
 =============
 */
+void GL_DrawAliasGlow (entity_t *currententity, model_t *clmodel);
 void R_DrawTransEntities (void)
 {
 	// need to draw back to front
 	// fixme: this isn't my favorite option
-	int		i;
-	float		bestdist, dist;
-	entity_t	*bestent;
+	int		i,j;
+	distent_t   dent[MAX_VISEDICTS];
 	vec3_t		start, test;
 /*******JDH*******/
 	entity_t *currententity;
@@ -707,14 +719,11 @@ void R_DrawTransEntities (void)
 	if (!r_drawentities.value)
 		return;
 
-transgetent:
-	bestdist = 0;
-	bestent = NULL;
-	for (i=0 ; i<cl_numvisedicts ; i++)
+	for (i=j=0 ; i<cl_numvisedicts ; i++)
 	{
 		currententity = cl_visedicts[i];
 
-		if (currententity->transignore || currententity->transparency == 1 || currententity->transparency == 0)
+		if (!currententity->glow && (currententity->transignore || currententity->transparency == 1 || currententity->transparency == 0) )
 			continue;
 
 		VectorCopy (currententity->origin, test);
@@ -724,36 +733,35 @@ transgetent:
 			test[1] += currententity->model->mins[1];
 			test[2] += currententity->model->mins[2];
 		}
-		dist = (((test[0] - start[0]) * (test[0] - start[0])) +
+		dent[j].dist = (((test[0] - start[0]) * (test[0] - start[0])) +
 			((test[1] - start[1]) * (test[1] - start[1])) +
 			((test[2] - start[2]) * (test[2] - start[2])));
-
-		if (dist > bestdist)
-		{
-			bestdist = dist;
-			bestent = currententity;
-		}
+		dent[j++].ent = currententity;
 	}
-	if (bestdist == 0)
-		return;
-	bestent->transignore = true;
 
-	currententity = bestent;
-	switch (currententity->model->type)
+	// Sort in descending dist order, i.e. back to front
+	qsort (dent, j, sizeof(distent_t), distcomp);
+
+	for (i = 0; i < j; ++i)
 	{
-	case mod_alias:
-		R_DrawAliasModel (currententity);
-		break;
+		currententity = dent[i].ent;
+        switch (currententity->model->type)
+        {
+        case mod_alias:
+            if (currententity->transparency != 0 && currententity->transparency != 1)
+                R_DrawAliasModel (currententity);
+            if (currententity->glow)
+                GL_DrawAliasGlow (currententity, currententity->model);
+            break;
 
-	case mod_brush:
-		R_DrawBrushModel (currententity);
-		break;
+        case mod_brush:
+            R_DrawBrushModel (currententity);
+            break;
 
-	default:
-		break;
+        default:
+            break;
+        }
 	}
-
-	goto transgetent;
 }
 
 
