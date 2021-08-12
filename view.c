@@ -1329,7 +1329,7 @@ void DropPunchAngle (void)
 		else					// big kick
 			punchangle -= 40 * host_frametime;
 
-		if (punchangle < cl.punchangle[0])
+		if (punchangle <= cl.punchangle[0])
 		{
 			punchangle = cl.punchangle[0];
 			cl.punchangle[0] = 0;
