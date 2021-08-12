@@ -2082,6 +2082,9 @@ void COM_InitFilesystem (void)
 	COM_InitImageLibs ();
 #endif
 
+	Q_strcpy (com_gamedir, com_basedir, sizeof(com_gamedir));
+	COM_AddDirectoryFiles();
+
 	if (Sys_FolderExists (va("%s/%s", com_basedir, RQMDIR)))
 		COM_AddGameDirectory (RQMDIR);
 
