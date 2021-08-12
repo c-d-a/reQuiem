@@ -8,7 +8,7 @@
 #endif
 
 #define REQUIEM_VERSION_SHORT               "0.95"
-#define	REQUIEM_VERSION	REQUIEM_VERSION_SHORT"-cda1"
+#define	REQUIEM_VERSION	REQUIEM_VERSION_SHORT"-cda2"
 
 int build_number (void);
 void Host_Version_f (cmd_source_t src);

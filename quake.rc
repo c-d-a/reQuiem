@@ -106,14 +106,14 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "reQuiem\0"
-            VALUE "FileVersion", "0.95-b2\0"
+            VALUE "FileVersion", "0.95-cda2\0"
             VALUE "InternalName", "reQuiem\0"
             VALUE "LegalCopyright", "Copyright © 2011\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "reQuiem.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "reQuiem\0"
-            VALUE "ProductVersion", "0.95-b2\0"
+            VALUE "ProductVersion", "0.95-cda2\0"
             VALUE "SpecialBuild", "\0"
         END
     END
