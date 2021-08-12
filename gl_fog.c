@@ -323,8 +323,8 @@ void Fog_SetupFrame (void)
 	float c[4];
 	float f, d;
 
-//	if (gl_fogenable.value)
-//	{
+	if (gl_fogenable.value)
+	{
 		if (fade_done > cl.time)
 		{
 			f = (fade_done - cl.time) / fade_time;
@@ -359,12 +359,12 @@ void Fog_SetupFrame (void)
 
 		Fog_EnableGFog ();
 
-/*		glEnable (GL_FOG);
+		glEnable (GL_FOG);
 	}
 	else
 	{
 		glDisable (GL_FOG);
-	}*/
+	}
 }
 
 /*
